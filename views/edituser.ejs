@@ -1,0 +1,101 @@
+<%- include("layout/header.ejs") %> <%- include("layout/footer.ejs") %>
+
+<div class="container">
+  <div class="row">
+    <div class="col-lg-6 mx-auto mt-4">
+      <div class="card shadow">
+        <div class="card-header bg-success">
+          <h5 class="text-light">Edit User (<%= user.name %>)</h5>
+        </div>
+        <div class="card-body p-4">
+          <form id="userForm" enctype="multipart/form-data">
+            <input type="hidden" name="_method" value="PUT" />
+            <!-- Optional for clarity -->
+
+            <div class="mb-3">
+              <label for="name">Name</label>
+              <input
+                type="text"
+                name="name"
+                class="form-control form-control-lg"
+                placeholder="Enter Name"
+                value="<%= user.name %>"
+                required
+              />
+            </div>
+            <div class="mb-3">
+              <label for="email">Email</label>
+              <input
+                type="email"
+                name="email"
+                class="form-control form-control-lg"
+                placeholder="Enter Email"
+                value="<%= user.email %>"
+                required
+              />
+            </div>
+            <div class="mb-3">
+              <label for="phone">Phone</label>
+              <input
+                type="tel"
+                name="phone"
+                class="form-control form-control-lg"
+                placeholder="Enter Phone"
+                value="<%= user.phone %>"
+                required
+              />
+            </div>
+            <div class="mb-3">
+              <label for="image" class="form-label">Select Image</label>
+              <input
+                type="file"
+                name="image"
+                class="form-control form-control-lg"
+              />
+              <img
+                src="<%= user.image %>"
+                width="100"
+                class="img-thumbnail mt-1"
+              />
+            </div>
+            <input type="hidden" name="old_image" value="<%= user.image %>" />
+            <div class="mb-3">
+              <input
+                type="submit"
+                name="submit"
+                value="Update User"
+                class="btn btn-success btn-lg"
+              />
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  $(document).ready(function () {
+    $("#userForm").on("submit", function (e) {
+      e.preventDefault(); // Prevent the default form submission
+      const formData = new FormData(this); // Create FormData object
+
+      $.ajax({
+        url: `/update/<%= user._id %>`, // Use the user's ID in the URL
+        type: "PUT", // Set request type to PUT
+        data: formData,
+        processData: false, // Important for file uploads
+        contentType: false, // Important for file uploads
+        success: function (response) {
+          alert(response.message); // Notify user of success
+          // Optionally, redirect or update the UI
+          // window.location.href = '/somepage'; // Redirect to a specific page
+        },
+        error: function (xhr) {
+          alert(`Error: ${xhr.responseJSON.message}`); // Handle errors
+        },
+      });
+    });
+  });
+</script>
